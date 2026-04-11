@@ -220,7 +220,7 @@ def main():
             if evento.type == pygame.QUIT:
                 running = False
             
-            i# --- LÓGICA DE EVENTOS POR ESTADO ---
+            # --- LÓGICA DE EVENTOS POR ESTADO ---
             if app_state == "MENU_INICIAL":
                 btn_start.handle_event(evento)
                 btn_exit_main.handle_event(evento)
@@ -307,7 +307,7 @@ def main():
                 print(f"\nIniciando fase: {target_planet.name}!")
                 
                 # chama a fase escolhida
-                resultado_fase = game_template.start(target_planet.name)
+                resultado_fase = game_template.start(target_planet)
                 
                 # retorno da fase para menu
                 print(f"\nFase concluída: {target_planet.name}!")

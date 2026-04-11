@@ -17,6 +17,7 @@ class PlanetaData:
     texture_id: int = None
     splash_texture_id: int = None
     is_unlocked: bool = False
+    layout: list = None
 
 
 def load_planets(caminho_arquivo):
@@ -33,7 +34,8 @@ def load_planets(caminho_arquivo):
                 axis_tilt=p['inclinacao_eixo'],
                 color_or_texture=p['cor_ou_textura'],
                 has_rings=p['possui_aneis'],
-                splash_image=p.get('splash_image', "")
+                splash_image=p.get('splash_image', ""),
+                layout=p.get('layout', [])
             )
             lista_planetas.append(novo_planeta)
             

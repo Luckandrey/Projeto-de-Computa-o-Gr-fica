@@ -218,3 +218,188 @@ def start_opengl(height, width):
     # suporte de canal alpha (transparência)
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+def draw_cube(x, y, z, size, height):
+    half = size / 2.0
+    
+    glBegin(GL_QUADS)
+    # cor da parede (pode customizar)
+    glColor3f(0.15, 0.2, 0.15)
+    
+    # frente
+    glVertex3f(x - half, y,          z + half)
+    glVertex3f(x + half, y,          z + half)
+    glVertex3f(x + half, y + height, z + half)
+    glVertex3f(x - half, y + height, z + half)
+    
+    # trás
+    glVertex3f(x - half, y,          z - half)
+    glVertex3f(x - half, y + height, z - half)
+    glVertex3f(x + half, y + height, z - half)
+    glVertex3f(x + half, y,          z - half)
+    
+    # esquerda
+    glVertex3f(x - half, y,          z - half)
+    glVertex3f(x - half, y,          z + half)
+    glVertex3f(x - half, y + height, z + half)
+    glVertex3f(x - half, y + height, z - half)
+    
+    # direita
+    glVertex3f(x + half, y,          z - half)
+    glVertex3f(x + half, y + height, z - half)
+    glVertex3f(x + half, y + height, z + half)
+    glVertex3f(x + half, y,          z + half)
+    glEnd()
+
+def draw_floor_tile(x, y, z, size):
+    half = size / 2.0
+    glBegin(GL_QUADS)
+    glColor3f(0.1, 0.1, 0.1) # cor do chão (pode customizar)
+    glVertex3f(x - half, y, z - half)
+    glVertex3f(x - half, y, z + half)
+    glVertex3f(x + half, y, z + half)
+    glVertex3f(x + half, y, z - half)
+    glEnd()
+
+def draw_u_stairs(x, y, z, size, height, direction_char):
+    half = size / 2.0
+    mid_y = height / 2.0
+    
+    angles = {'^': 0, '<': 90, 'v': 180, '>': -90}
+    angle = angles.get(direction_char, 0)
+
+    glPushMatrix()
+    glTranslatef(x, y, z)
+    glRotatef(angle, 0, 1, 0)
+    
+    glColor3f(0.2, 0.25, 0.2)
+    glBegin(GL_QUADS)
+    
+    # patamar
+    glVertex3f(-half, mid_y,  0); glVertex3f( half, mid_y,  0)
+    glVertex3f( half, mid_y, -half); glVertex3f(-half, mid_y, -half)
+    glVertex3f(-half, 0,  0); glVertex3f( half, 0,  0)
+    glVertex3f( half, mid_y,  0); glVertex3f(-half, mid_y,  0)
+    glVertex3f(-half, 0, -half); glVertex3f(-half, mid_y, -half)
+    glVertex3f( half, mid_y, -half); glVertex3f( half, 0, -half)
+    glVertex3f(-half, 0, -half); glVertex3f(-half, 0,  0)
+    glVertex3f(-half, mid_y,  0); glVertex3f(-half, mid_y, -half)
+    glVertex3f( half, 0,  0); glVertex3f( half, 0, -half)
+    glVertex3f( half, mid_y, -half); glVertex3f( half, mid_y,  0)
+    
+    # lance 1
+    glVertex3f(0, 0, half); glVertex3f(half, 0, half)
+    glVertex3f(half, mid_y, 0); glVertex3f(0, mid_y, 0)
+    
+    # lance 2
+    glVertex3f(-half, mid_y, 0); glVertex3f(0, mid_y, 0)
+    glVertex3f(0, height, half); glVertex3f(-half, height, half)
+    glVertex3f(-half, 0, half); glVertex3f(0, 0, half)
+    glVertex3f(0, height, half); glVertex3f(-half, height, half)
+    glEnd()
+    
+    glBegin(GL_TRIANGLES)
+    glVertex3f(half, 0, half); glVertex3f(half, 0, 0); glVertex3f(half, mid_y, 0)
+    glVertex3f(0, 0, half); glVertex3f(0, mid_y, 0); glVertex3f(0, 0, 0)
+    glEnd()
+    
+    glBegin(GL_QUADS)
+    glVertex3f(-half, 0, half); glVertex3f(-half, 0, 0)
+    glVertex3f(-half, mid_y, 0); glVertex3f(-half, height, half)
+    glVertex3f(0, 0, half); glVertex3f(0, 0, 0)
+    glVertex3f(0, mid_y, 0); glVertex3f(0, height, half)
+    glEnd()
+    
+    glPopMatrix()
+
+def draw_computer(x, y, z, size, wall_height):
+    comp_base_w = size * 0.2
+    comp_base_d = size * 0.2
+    half_w = comp_base_w / 2.0
+    half_d = comp_base_d / 2.0
+    
+    comp_base_h = wall_height * 0.35 
+    
+    comp_monitor_h = 0.5 
+    top_y = comp_monitor_h
+    
+    # laterais retas
+    half_top_w = half_w 
+    
+    # o topo frontal recua para trás para criar a rampa
+    top_front_z = -half_d + (comp_base_d * 0.3) 
+    
+    color_base = (0.3, 0.3, 0.3)
+    color_screen = (0.0, 0.0, 0.6)
+
+    glPushMatrix()
+    glTranslatef(x, y, z)
+    
+    # desenhar a base (corpo Principal)
+    glColor3fv(color_base)
+    glBegin(GL_QUADS)
+    # face Frontal
+    glVertex3f(-half_w, 0, half_d); glVertex3f(half_w, 0, half_d)
+    glVertex3f(half_w, comp_base_h, half_d); glVertex3f(-half_w, comp_base_h, half_d)
+    # face Traseira
+    glVertex3f(-half_w, 0, -half_d); glVertex3f(-half_w, comp_base_h, -half_d)
+    glVertex3f(half_w, comp_base_h, -half_d); glVertex3f(half_w, 0, -half_d)
+    # face Esquerda
+    glVertex3f(-half_w, 0, -half_d); glVertex3f(-half_w, 0, half_d)
+    glVertex3f(-half_w, comp_base_h, half_d); glVertex3f(-half_w, comp_base_h, -half_d)
+    # face Direita
+    glVertex3f(half_w, 0, -half_d); glVertex3f(half_w, comp_base_h, -half_d)
+    glVertex3f(half_w, comp_base_h, half_d); glVertex3f(half_w, 0, half_d)
+    # face Superior
+    glVertex3f(-half_w, comp_base_h, -half_d); glVertex3f(-half_w, comp_base_h, half_d)
+    glVertex3f(half_w, comp_base_h, half_d); glVertex3f(half_w, comp_base_h, -half_d)
+    glEnd()
+
+    # desenhar o monitor
+    glTranslatef(0, comp_base_h, 0) 
+    
+    glColor3fv(color_base)
+    glBegin(GL_QUADS)
+    # costas (reta vertical e alinhada)
+    glVertex3f(-half_w, 0, -half_d); glVertex3f(-half_top_w, top_y, -half_d)
+    glVertex3f(half_top_w, top_y, -half_d); glVertex3f(half_w, 0, -half_d)
+    # esquerda
+    glVertex3f(-half_w, 0, -half_d); glVertex3f(-half_w, 0, half_d)
+    glVertex3f(-half_top_w, top_y, top_front_z); glVertex3f(-half_top_w, top_y, -half_d)
+    # direita
+    glVertex3f(half_w, 0, -half_d); glVertex3f(half_top_w, top_y, -half_d)
+    glVertex3f(half_top_w, top_y, top_front_z); glVertex3f(half_w, 0, half_d)
+    # topo 
+    glVertex3f(-half_top_w, top_y, -half_d); glVertex3f(-half_top_w, top_y, top_front_z)
+    glVertex3f(half_top_w, top_y, top_front_z); glVertex3f(half_top_w, top_y, -half_d)
+    # frente (uma rampa inclinada)
+    glVertex3f(-half_w, 0, half_d); glVertex3f(half_w, 0, half_d)
+    glVertex3f(half_top_w, top_y, top_front_z); glVertex3f(-half_top_w, top_y, top_front_z)
+    glEnd()
+    
+    # desenhar a tela azul
+    margin = 0.1
+    screen_bot_y = top_y * margin
+    screen_top_y = top_y * (1.0 - margin)
+    
+    # função matemática para calcular o Z na rampa
+    def get_ramp_z(y_val):
+        t = y_val / top_y 
+        z_val = half_d + t * (top_front_z - half_d)
+        return z_val
+        
+    z_bot = get_ramp_z(screen_bot_y)
+    z_top = get_ramp_z(screen_top_y)
+    
+    x_val = half_w * (1.0 - margin)
+    z_offset = 0.01 
+    
+    glColor3fv(color_screen)
+    glBegin(GL_QUADS)
+    glVertex3f(-x_val, screen_bot_y, z_bot + z_offset)
+    glVertex3f( x_val, screen_bot_y, z_bot + z_offset)
+    glVertex3f( x_val, screen_top_y, z_top + z_offset)
+    glVertex3f(-x_val, screen_top_y, z_top + z_offset)
+    glEnd()
+    
+    glPopMatrix()
