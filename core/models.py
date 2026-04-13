@@ -10,6 +10,7 @@ class PlanetaData:
     color_or_texture: str
     has_rings: bool
     splash_image: str = "" 
+    level_name: str = ""
     current_angle: float = 0.0
     pos_x: float = 0.0
     pos_y: float = 0.0
@@ -35,6 +36,7 @@ def load_planets(caminho_arquivo):
                 color_or_texture=p['cor_ou_textura'],
                 has_rings=p['possui_aneis'],
                 splash_image=p.get('splash_image', ""),
+                level_name=p.get('level_name', ""),
                 layout=p.get('layout', [])
             )
             lista_planetas.append(novo_planeta)

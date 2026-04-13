@@ -9,9 +9,10 @@
       "cor_ou_textura": "Alpine.png",
       "possui_aneis": false,
       "splash_image": "tau_ceti_splash.png",
+      "level_name" : "tau_ceti_iv",
       "layout": [
         [
-          "PPPPPPPPPPPPPPPPPPPPPPPPP  ",
+          "PPPNPPPPPPPPPPPPPPPPPPPPP  ",
           "P.......................P  ",
           "P.......................P  ",
           "PP....PPPPPPPPPP.....PPPP  ",
@@ -42,7 +43,7 @@
           "P.P............P.P........P",
           "P.P............PvP........P",
           "P.PPPPPPPPPPPPPPPPPPPPPPPPP",
-          "P.P...P.P..P.P...P........P",
+          "P.P...P.P..PAP...P........P",
           "P.P...P.P.................P",
           "P.P...P.V..P.P...P........P",
           "P.P...P.V..P.P...P........P",
@@ -50,7 +51,7 @@
           "P.P...P.V..P.P...P........P",
           "P.P...P.PM................P",
           "P.P...P.P..P@P...P........P",
-          "PPPPPPPPPPPPPPPPPPPPPPPPPPP",
+          "PPPPPPPPPPPPSPPPPPPPPPPPPPP",
           "                           "
         ],
         [
@@ -65,7 +66,7 @@
           "P................P..P",
           "PPPPP.PPPPP.PP.PPP..P",
           "P...P.P...P.P...P...P",
-          "P...P.P...P.....P...P",
+          "P...P.P...P.....L...P",
           "P...P.P...P.P...P...P",
           "P...P.P...P.PPPPP...P",
           "P...P.....P...P.....P",
@@ -102,7 +103,7 @@
           "P.P.........P.......P",
           "P.P....PPPP.P.......P",
           "P.P....P....P.......P",
-          "P......P....PPPPPPPPP",
+          "O......P....PPPPPPPPP",
           "P.P....PPPP.P.......P",
           "P.PPPPP...P.P.......P",
           "P.P.......P.........P",
@@ -156,6 +157,7 @@
       "cor_ou_textura": "Gaseous4.png",
       "possui_aneis": true,
       "splash_image": "esteves_splash.png",
+      "level_name" : "esteves",
       "layout": [
         [
           "PPPPPPPPPP",
@@ -176,6 +178,7 @@
       "cor_ou_textura": "Martian.png", 
       "possui_aneis": false,
       "splash_image": "splash.png",
+      "level_name" : "vendas",
       "layout": [
         [
           "PPPPPPPPPP",
@@ -196,17 +199,8 @@
       "cor_ou_textura": "Volcanic.png", 
       "possui_aneis": false,
       "splash_image": "splash.png",
-      "layout": [
-        [
-          "PPPPPPPPPP",
-          "P@.......P",
-          "PPPP..PPPP",
-          "P........P",
-          "P.PPPPPP.P",
-          "P........P",
-          "PPPPPPPPPP"
-        ]
-      ]
+      "level_name" : "arago",
+      "layout": "random"
     },
     {
       "nome": "Regis",
@@ -216,6 +210,7 @@
       "cor_ou_textura": "Tropical.png", 
       "possui_aneis": true,
       "splash_image": "splash.png",
+      "level_name" : "regis",
       "layout": [
         [
           "PPPPPPPPPP",

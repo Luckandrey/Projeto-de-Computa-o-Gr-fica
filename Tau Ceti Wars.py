@@ -7,7 +7,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from pygame.locals import *
 
-# Módulos novos
+# módulos core
 from core.ui import Button, Title
 from core.models import PlanetaData, load_planets
 from core.graphics_utils import load_game_resources
@@ -40,17 +40,8 @@ def main():
     pygame.mixer.pre_init(44100, -16, 2, 512)
     pygame.init()
     pygame.mixer.init() # Inicializa o módulo de som do pygame
-
-    # incialização de fonte
-    pygame.font.init() # Inicializa o renderizador de fontes
+    pygame.font.init() # inicializa o renderizador de fontes
     
-    script_path = os.path.dirname(os.path.abspath(__file__))
-    font_path = os.path.join(script_path, 'Assets', 'Fonts', 'united-sans-reg-bold.otf')
-    
-    fonte_tooltip = pygame.font.SysFont(font_path, 24, bold=True)
-    fonte_botao = pygame.font.Font(font_path, 28)
-    fonte_titulo = pygame.font.SysFont('Arial', 72, bold=True) # Fonte para o título
-
     # obtém as informações do monitor atual
     screen_info = pygame.display.Info()
     screen_height = screen_info.current_h
@@ -59,8 +50,34 @@ def main():
     screen = pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL)
     pygame.display.set_caption("Tau Ceti Wars")
 
-    start_opengl(screen_height, screen_width)
+    script_path = os.path.dirname(os.path.abspath(__file__))
 
+    # pega o diretório com o nome do arquivo json
+    json_path = os.path.join(script_path, 'planetas.json')
+    
+    start_opengl(screen_height, screen_width)
+    
+    # essa função é responsável por carregar todos os recursos do jogo
+    star_system, background_texture_id, ring_texture_id, font_path, music_path = load_game_resources(
+        script_path,
+        json_path,
+        screen_width,
+        screen_height
+    )
+
+    fonte_tooltip = pygame.font.SysFont(font_path, 24, bold=True)
+    fonte_botao = pygame.font.Font(font_path, 28)
+    fonte_titulo = pygame.font.SysFont('Arial', 72, bold=True)
+
+    # carrega a música de ambiente
+    music_path = os.path.join(script_path, 'Assets', 'Sounds', 'Deep Space Travel Ambience 3 (Menu).mp3')
+    try:
+        pygame.mixer.music.load(music_path)
+        pygame.mixer.music.set_volume(0.6) # volume opcional para não estourar os ouvidos caso o arquivo seja alto
+        pygame.mixer.music.play(-1) # -1 faz a música ficar rodando em loop
+    except Exception as e:
+        print(f"Aviso: Não foi possível carregar o som ambiente: {e}")
+    
     # relógio para controle de fps
     clock = pygame.time.Clock()
     FPS = 60
@@ -150,31 +167,6 @@ def main():
         hover_color=hover_button_color, text_color=font_button_color
     )
 
-    # pega o diretório com o nome do arquivo json
-    json_path = os.path.join(script_path, 'planetas.json')
-
-    # Carrega a música de ambiente
-    music_path = os.path.join(script_path, 'Assets', 'Sounds', 'Deep Space Travel Ambience 3 (Menu).mp3')
-    try:
-        pygame.mixer.music.load(music_path)
-        pygame.mixer.music.set_volume(0.6) # Volume opcional para não estourar os ouvidos caso o arquivo seja alto
-        pygame.mixer.music.play(-1) # -1 faz a música ficar rodando em loop
-    except Exception as e:
-        print(f"Aviso: Não foi possível carregar o som ambiente: {e}")
-
-    
-    
-
-    # Essa função é responsável por carregar todos os recursos gráficos
-    # dos planetas.
-    star_system, background_texture_id, ring_texture_id = load_game_resources(
-        script_path,
-        json_path,
-        screen_width,
-        screen_height
-    )
-
-
     # posições em que cada planeta vai ficar na cena
     planet_positions = [
         (-30.0, -10.0, 0.0), # Slot 1: fundo esquerda, mais baixo
@@ -235,7 +227,7 @@ def main():
                         for planet in star_system:
                             planet.is_unlocked = True
                         print("\nTodos os planetas foram desbloqueados")
-                        # Salva o global status
+                        # salva o global status
                         save_manager.save_global_state([p.name for p in star_system if p.is_unlocked])
                 
                 # detecta o clique do mouse no planeta
@@ -314,11 +306,16 @@ def main():
                 # Reinicia a música ambiente do menu
                 pygame.mixer.music.play(-1)
                 
-                # Desbloqueia o próximo planeta se tiver vencido (Lógica simplificada)
-                # if resultado_fase == "VITORIA":
-                    # liberar_proximo_planeta()
-                    # save_manager.clear_level_state()
-                    # save_manager.save_global_state([...])
+                if resultado_fase == "win": #{
+                    # percorremos o sistema para encontrar o planeta que acabamos de vencer
+                    for i in range(len(star_system)): #{
+                        if star_system[i].name == target_planet.name: #{
+                            # se existir um próximo planeta na lista, ele é desbloqueado
+                            if i + 1 < len(star_system): #{
+                                star_system[i + 1].is_unlocked = True
+                                print(f"Sucesso! Próximo destino desbloqueado: {star_system[i + 1].name}")
+                                save_manager.save_game_progress(star_system)
+                            break
                 
                 # reseta todas as variáveis de visualização
                 start_opengl(screen_height, screen_width)
@@ -326,6 +323,7 @@ def main():
                 if resultado_fase == "LOAD_GAME":
                     cb_carregar_main()
                 else:
+                    app_state = "SISTEMA_SOLAR"
                     transition_state = "IDLE"
                     fade_alpha = 0.0
                     target_planet = None

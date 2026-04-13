@@ -1,7 +1,9 @@
 import pygame
+import math
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from core.graphics_utils import hex_to_rgb
+from core.physics_engine import *
 
 def draw_ring(internal_radius, external_radius, texture_id):
     # gerando malha com furo no meio
@@ -219,12 +221,11 @@ def start_opengl(height, width):
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
-def draw_cube(x, y, z, size, height):
+def draw_cube(x, y, z, size, height, color=(0.15, 0.2, 0.15)):
     half = size / 2.0
     
     glBegin(GL_QUADS)
-    # cor da parede (pode customizar)
-    glColor3f(0.15, 0.2, 0.15)
+    glColor3f(*color) # usa a cor dinâmica
     
     # frente
     glVertex3f(x - half, y,          z + half)
@@ -251,10 +252,11 @@ def draw_cube(x, y, z, size, height):
     glVertex3f(x + half, y,          z + half)
     glEnd()
 
-def draw_floor_tile(x, y, z, size):
+
+def draw_floor_tile(x, y, z, size, color=(0.1, 0.1, 0.1)):
     half = size / 2.0
     glBegin(GL_QUADS)
-    glColor3f(0.1, 0.1, 0.1) # cor do chão (pode customizar)
+    glColor3f(*color) # usa a cor dinâmica
     glVertex3f(x - half, y, z - half)
     glVertex3f(x - half, y, z + half)
     glVertex3f(x + half, y, z + half)
@@ -312,7 +314,7 @@ def draw_u_stairs(x, y, z, size, height, direction_char):
     
     glPopMatrix()
 
-def draw_computer(x, y, z, size, wall_height):
+def draw_computer(x, y, z, size, wall_height, screen_color=(0.0, 0.0, 0.6)):
     comp_base_w = size * 0.2
     comp_base_d = size * 0.2
     half_w = comp_base_w / 2.0
@@ -330,7 +332,6 @@ def draw_computer(x, y, z, size, wall_height):
     top_front_z = -half_d + (comp_base_d * 0.3) 
     
     color_base = (0.3, 0.3, 0.3)
-    color_screen = (0.0, 0.0, 0.6)
 
     glPushMatrix()
     glTranslatef(x, y, z)
@@ -394,7 +395,7 @@ def draw_computer(x, y, z, size, wall_height):
     x_val = half_w * (1.0 - margin)
     z_offset = 0.01 
     
-    glColor3fv(color_screen)
+    glColor3fv(screen_color) 
     glBegin(GL_QUADS)
     glVertex3f(-x_val, screen_bot_y, z_bot + z_offset)
     glVertex3f( x_val, screen_bot_y, z_bot + z_offset)
@@ -403,3 +404,68 @@ def draw_computer(x, y, z, size, wall_height):
     glEnd()
     
     glPopMatrix()
+
+def draw_creature(x, y, z, yaw_degrees, body_color, glow_color, pulse_time):
+    body_height = 2.8 + math.sin(pulse_time * 0.008) * 0.16
+    body_size = BLOCK_SIZE * 0.26
+    head_size = body_size * 0.72
+
+    glPushMatrix()
+    glTranslatef(x, y, z)
+    glRotatef(yaw_degrees, 0, 1, 0)
+
+    draw_cube(0, 0.0, 0, body_size, body_height, color=body_color)
+    draw_cube(0, body_height * 0.72, 0, head_size, 1.0, color=tuple(min(1.0, c * 1.2) for c in body_color))
+
+    eye_glow = 0.82 + ((math.sin(pulse_time * 0.012) + 1.0) * 0.09)
+    eye_color = tuple(min(1.0, channel * eye_glow) for channel in glow_color)
+    eye_y = body_height * 0.95
+    eye_z = head_size / 2.0 + 0.03
+    eye_offset = head_size * 0.22
+    eye_size = 0.10
+
+    glBegin(GL_QUADS)
+    glColor3f(*eye_color)
+    for eye_x in (-eye_offset, eye_offset):
+        glVertex3f(eye_x - eye_size, eye_y - eye_size, eye_z)
+        glVertex3f(eye_x + eye_size, eye_y - eye_size, eye_z)
+        glVertex3f(eye_x + eye_size, eye_y + eye_size, eye_z)
+        glVertex3f(eye_x - eye_size, eye_y + eye_size, eye_z)
+    glEnd()
+
+    glPopMatrix()
+
+def draw_collectible(x, y, z, size, body_color, glow_color, pulse_time):
+    pulse_scale = 0.82 + ((math.sin(pulse_time * 0.007) + 1.0) * 0.10)
+    bob = math.sin(pulse_time * 0.005) * 0.18
+    draw_cube(x, y + 0.5 + bob, z, size * 0.55, 1.25, color=body_color)
+
+    glow = tuple(min(1.0, channel * pulse_scale) for channel in glow_color)
+    half = size * 0.26
+    top_y = y + 1.95 + bob
+
+    glBegin(GL_QUADS)
+    glColor3f(*glow)
+    glVertex3f(x - half, top_y, z - half)
+    glVertex3f(x - half, top_y, z + half)
+    glVertex3f(x + half, top_y, z + half)
+    glVertex3f(x + half, top_y, z - half)
+    glEnd()
+
+
+def draw_exit_module(x, y, z, size, locked_color, unlocked_color, unlocked, pulse_time):
+    module_color = unlocked_color if unlocked else locked_color
+    draw_cube(x, y, z, size * 0.52, 2.6, color=module_color)
+
+    glow = 0.75 + ((math.sin(pulse_time * 0.007) + 1.0) * 0.14)
+    light_color = (0.45, 1.0, 0.55) if unlocked else (0.85, 0.18, 0.18)
+    top_color = tuple(min(1.0, channel * glow) for channel in light_color)
+    half = (size * 0.34) / 2.0
+
+    glBegin(GL_QUADS)
+    glColor3f(*top_color)
+    glVertex3f(x - half, y + 2.65, z - half)
+    glVertex3f(x - half, y + 2.65, z + half)
+    glVertex3f(x + half, y + 2.65, z + half)
+    glVertex3f(x + half, y + 2.65, z - half)
+    glEnd()

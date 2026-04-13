@@ -16,7 +16,7 @@ def is_wall(x, y, z, level_map):
         
     char = level_map[andar][row][col]
     
-    if char in ['P', 'V', ' ']:
+    if char in ['P', 'V', ' ', 'N', 'S', 'L', 'O']:
         return True
         
     if char in ['<', '>', '^', 'v']:

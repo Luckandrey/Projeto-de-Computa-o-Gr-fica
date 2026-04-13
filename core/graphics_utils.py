@@ -98,6 +98,14 @@ def load_game_resources(script_path:str, json_path: str, screen_width:int, scree
 
     pasta_splash = os.path.join(pasta_assets, 'Splash') # pega a pasta de splash arts
 
+    pasta_fonts = os.path.join(pasta_assets, 'Fonts')
+    
+    pasta_sounds = os.path.join(pasta_assets, 'Sounds')
+
+    font_path = os.path.join(pasta_fonts, 'united-sans-reg-bold.otf')
+
+    music_path = os.path.join(pasta_sounds, 'Deep Space Travel Ambience 3 (Menu).mp3')
+
     for planet in star_system:
         # verifica se o campo parece ser um arquivo de imagem
         if planet.color_or_texture.lower().endswith(('.png', '.jpg', '.jpeg')):
@@ -132,4 +140,4 @@ def load_game_resources(script_path:str, json_path: str, screen_width:int, scree
     else:
         print(" -> Textura 'fundo_espacial.png' não encontrada")
     
-    return star_system, background_texture_id, ring_texture_id
+    return star_system, background_texture_id, ring_texture_id, font_path, music_path
