@@ -1,3 +1,4 @@
+from pygame import FULLSCREEN
 import os
 import sys
 import math
@@ -47,7 +48,7 @@ def main():
     screen_height = screen_info.current_h
     screen_width = screen_info.current_w
 
-    screen = pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL)
+    screen = pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL | FULLSCREEN)
     pygame.display.set_caption("Tau Ceti Wars")
 
     script_path = os.path.dirname(os.path.abspath(__file__))

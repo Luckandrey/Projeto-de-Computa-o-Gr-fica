@@ -418,7 +418,7 @@ def start(planet, saved_state=None):
     screen_height = screen_info.current_h
     
     # garante que o contexto OpenGL está limpo e focado
-    pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL)
+    pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL | FULLSCREEN)
     
     init_opengl_fps(screen_width, screen_height)
     
@@ -544,6 +544,7 @@ def start(planet, saved_state=None):
     running = True
     is_paused = False
     result_state = "MENU"
+    esc_held = False
 
     def cb_continuar():
         nonlocal is_paused
@@ -612,6 +613,24 @@ def start(planet, saved_state=None):
 
         now = pygame.time.get_ticks()
 
+        keys_raw = pygame.key.get_pressed()
+        
+        if (keys_raw[K_ESCAPE] or keys_raw[K_p]) and not esc_held:
+            esc_held = True
+            if interacting_comp:
+                interacting_comp = None # Sai do PC
+                pygame.mouse.set_visible(False)
+                pygame.event.set_grab(True)
+            else:
+                if is_paused:
+                    cb_continuar()
+                else:
+                    is_paused = True
+                    pygame.mouse.set_visible(True)
+                    pygame.event.set_grab(False)
+        elif not (keys_raw[K_ESCAPE] or keys_raw[K_p]):
+            esc_held = False
+
         # leitor de eventos
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -627,11 +646,7 @@ def start(planet, saved_state=None):
 
             if event.type == KEYDOWN:
                 if interacting_comp:
-                    if event.key == K_ESCAPE:
-                        interacting_comp = None # Sai do PC
-                        pygame.mouse.set_visible(False)
-                        pygame.event.set_grab(True)
-                    elif event.key == K_BACKSPACE:
+                    if event.key == K_BACKSPACE:
                         interacting_comp['current_input'] = interacting_comp['current_input'][:-1]
                     elif event.key == K_RETURN or event.key == K_KP_ENTER:
                         # Valida a senha
@@ -655,15 +670,7 @@ def start(planet, saved_state=None):
                                 interacting_comp['current_input'] += char_digitado
 
                 else:
-                    if event.key == K_ESCAPE:
-                        if is_paused:
-                            cb_continuar()
-                        else:
-                            is_paused = True
-                            pygame.mouse.set_visible(True)
-                            pygame.event.set_grab(False)
-                    
-                    elif event.key == K_e and near_comp and not near_comp['resolved']: 
+                    if event.key == K_e and near_comp and not near_comp['resolved']: 
                         if not is_paused: 
                             # Abre a interface do computador
                             interacting_comp = near_comp

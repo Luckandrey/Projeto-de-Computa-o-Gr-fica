@@ -1,18 +1,18 @@
 {
     "unlocked_planets": [
         "Tau Ceti IV",
-        "Esteves",
+        "KG-348",
         "Vendas",
         "Arago",
         "Regis"
     ],
     "level": {
-        "cam_x": 48.0,
-        "cam_y": 6.0,
-        "cam_z": 68.0,
-        "player_y": 6.0,
-        "yaw": -182.85000000000002,
-        "pitch": 4.35,
-        "planet_name": "Tau Ceti IV"
+        "cam_x": 13.772697511620953,
+        "cam_y": 2.0,
+        "cam_z": 22.97891458615902,
+        "player_y": 2.0,
+        "yaw": -264.1500000000002,
+        "pitch": 18.600000000000005,
+        "planet_name": "KG-348"
     }
 }

@@ -1,4 +1,3 @@
-
 {
   "planetas": [
     {
@@ -9,7 +8,7 @@
       "cor_ou_textura": "Alpine.png",
       "possui_aneis": false,
       "splash_image": "tau_ceti_splash.png",
-      "level_name" : "tau_ceti_iv",
+      "level_name": "tau_ceti_iv",
       "layout": [
         [
           "PPPNPPPPPPPPPPPPPPPPPPPPP  ",
@@ -150,23 +149,31 @@
       ]
     },
     {
-      "nome": "Esteves",
+      "nome": "KG-348",
       "tamanho": 6.1,
       "velocidade_rotacao": 0.04,
       "inclinacao_eixo": -26.7,
       "cor_ou_textura": "Gaseous4.png",
       "possui_aneis": true,
       "splash_image": "esteves_splash.png",
-      "level_name" : "esteves",
+      "level_name": "kg_348",
       "layout": [
         [
-          "PPPPPPPPPP",
-          "P@.......P",
-          "PPPP..PPPP",
-          "P........P",
-          "P.PPPPPP.P",
-          "P........P",
-          "PPPPPPPPPP"
+          "PPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+          "P.......PPP.......PPP.......P",
+          "P...M....D....M....D....M...P",
+          "P.......PPP.......PPP.......P",
+          "PPPP.PPPPPPPPP.PPPPPPPPP.PPPP",
+          "PPPPDPPPPPPPPPDPPPPPPPPPDPPPP",
+          "PPPP.PPP...PPP.PPP...PPP.PPPP",
+          "P@...D...M..D.M.D..M..D.M...P",
+          "PPPP.PPP...PPP.PPP...PPP.PPPP",
+          "PPPPDPPPPPPPPPDPPPPPPPPPDPPPP",
+          "PPPP.PPPPPPPPP.PPPPPPPPP.PPPP",
+          "P.......PPP.......PPP.......P",
+          "P...M....D....M....D....M...P",
+          "P.......PPP.......PPP.......P",
+          "PPPPPPPPPPPPPPPPPPPPPPPPPPPP"
         ]
       ]
     },
@@ -175,10 +182,10 @@
       "tamanho": 2.5,
       "velocidade_rotacao": 0.09,
       "inclinacao_eixo": -21.6,
-      "cor_ou_textura": "Martian.png", 
+      "cor_ou_textura": "Martian.png",
       "possui_aneis": false,
       "splash_image": "splash.png",
-      "level_name" : "vendas",
+      "level_name": "vendas",
       "layout": [
         [
           "PPPPPPPPPP",
@@ -196,10 +203,10 @@
       "tamanho": 1.9,
       "velocidade_rotacao": -0.08,
       "inclinacao_eixo": -20.5,
-      "cor_ou_textura": "Volcanic.png", 
+      "cor_ou_textura": "Volcanic.png",
       "possui_aneis": false,
       "splash_image": "splash.png",
-      "level_name" : "arago",
+      "level_name": "arago",
       "layout": "random"
     },
     {
@@ -207,10 +214,10 @@
       "tamanho": 0.5,
       "velocidade_rotacao": 0.2,
       "inclinacao_eixo": -15.5,
-      "cor_ou_textura": "Tropical.png", 
+      "cor_ou_textura": "Tropical.png",
       "possui_aneis": true,
       "splash_image": "splash.png",
-      "level_name" : "regis",
+      "level_name": "regis",
       "layout": [
         [
           "PPPPPPPPPP",
