@@ -517,7 +517,7 @@ def start(planet, saved_state=None):
     screen_width = screen_info.current_w
     screen_height = screen_info.current_h
 
-    pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL)
+    pygame.display.set_mode((screen_width, screen_height), DOUBLEBUF | OPENGL| FULLSCREEN)
     init_opengl_fps(screen_width, screen_height)
 
     pygame.mouse.set_visible(False)
@@ -735,6 +735,7 @@ def start(planet, saved_state=None):
     )
 
     running = True
+    esc_held = False
 
     while running:
         player_position = (cam_x, cam_z)
@@ -748,6 +749,13 @@ def start(planet, saved_state=None):
         exit_unlocked = items_collected >= TOTAL_ARAGO_ITEMS
         creature_profile = get_creature_profile(items_collected)
         creature_state = creature_profile["state"]
+
+        keys_raw = pygame.key.get_pressed()
+        if (keys_raw[K_ESCAPE] or keys_raw[K_p]) and not esc_held:
+            esc_held = True
+            running = False
+        elif not (keys_raw[K_ESCAPE] or keys_raw[K_p]):
+            esc_held = False
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -765,15 +773,8 @@ def start(planet, saved_state=None):
 
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    is_paused = not is_paused
-                    if is_paused:
-                        pygame.mouse.set_visible(True)
-                        pygame.event.set_grab(False)
-                    else:
-                        pygame.mouse.set_visible(False)
-                        pygame.event.set_grab(True)
-                        pygame.mouse.get_rel()
-                elif not is_paused and event.key == K_e and planet.name == "Arago":
+                    running = False
+                elif event.key == K_e and planet.name == "Arago":
                     if near_item_position:
                         collected_items.add(near_item_position)
                         items_collected += 1
